@@ -1,0 +1,55 @@
+<div>
+  <%= form_with(url: root_path, method: :get, data: { remote: false }) do %>
+    <div>
+      <%= label_tag(:sum_range, "Диапазон цифр для примеров на сложение:") %>
+      <%= select_tag(:sum_range, options_for_select([["0-10", 10], ["0-20", 20], ["0-100", 100]])) %>
+
+      <%= label_tag(:difference_range, "Диапазон цифр для примеров на вычитания:") %>
+      <%= select_tag(:difference_range, options_for_select([["0-10", 10], ["0-20", 20], ["0-100", 100]])) %>
+
+      <%= label_tag(:multiplication_range, "Диапазон цифр для примеров на умножения:") %>
+      <%= select_tag(:multiplication_range, options_for_select([["0-5", 5], ["0-6", 6],
+                                                     ["0-7", 7], ["0-8", 8],
+                                                     ["0-9", 9], ["0-10", 10]])) %>
+
+      <%= label_tag(:divider_range, "Диапазон цифр для примеров на деления:") %>
+      <%= select_tag(:divider_range, options_for_select([["1-5", 5], ["1-6", 6],
+                                                     ["1-7", 7], ["1-8", 8],
+                                                     ["1-9", 9], ["1-10", 10]])) %>
+      <%= hidden_field_tag(:generate, true) %>
+      <%= submit_tag("Создать") %>
+      <br />
+    </div>
+  <% end %>
+</div>
+
+
+<div style="border-style: groove; justify-content: center;display: flex;background: red;color: blue;">
+  <a href="#" onclick="PrintDiv();">print me</a>
+</div>
+
+<div id=divToPrint>
+  <% examples.each_slice(40) do |col| %>
+    <div style="width: 1200px;">
+      <div style="width: 250px; height: 1650px; float: left;">
+        <% col.each do |x| %>
+          <ul>
+            <li><%= x %></li>
+          </ul>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+
+
+<script type="text/javascript">
+  function PrintDiv() {
+    var divToPrint = document.getElementById('divToPrint');
+    var popupWin = window.open('', '_blank');
+    popupWin.document.open();
+    popupWin.document.write('<html><body onload="window.print()">' + divToPrint.innerHTML + '</html>');
+    popupWin.document.close();
+  }
+</script>
