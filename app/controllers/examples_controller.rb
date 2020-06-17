@@ -51,7 +51,7 @@ class ExamplesController < ApplicationController
 
     # mask = params[:mask]
 
-    examples = potential_cells.map { |_, values| values.map { |x| x + "=" } }.flatten.shuffle.first(160)
+    examples = potential_cells.map { |_, values| values.map { |x| x + "=" } }.flatten.shuffle.first(150)
     render :index, locals: { examples: examples }
   end
 end
