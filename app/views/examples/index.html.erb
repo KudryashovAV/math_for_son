@@ -3,10 +3,12 @@
     <%= form_with(url: root_path, method: :get, data: { remote: false }) do %>
       <div>
         <%= label_tag(:sum_range, "Диапазон цифр для примеров на сложение:") %>
-        <%= select_tag(:sum_range, options_for_select([["Не нужно", nil], ["0-10", 10], ["0-20", 20], ["0-100", 100]])) %>
+        <%= select_tag(:sum_range, options_for_select([["Не нужно", nil], ["0-10", 10],
+                                                       ["0-20", 20],["0-100", 100]])) %>
 
         <%= label_tag(:difference_range, "Диапазон цифр для примеров на вычитания:") %>
-        <%= select_tag(:difference_range, options_for_select([["Не нужно", nil], ["0-10", 10], ["0-20", 20], ["0-100", 100]])) %>
+        <%= select_tag(:difference_range, options_for_select([["Не нужно", nil], ["0-10", 10],
+                                                              ["0-20", 20], ["0-100", 100]])) %>
 
         <%= label_tag(:multiplication_range, "Диапазон цифр для примеров на умножения:") %>
         <%= select_tag(:multiplication_range, options_for_select([["Не нужно", nil], ["0-5", 5], ["0-6", 6],
@@ -19,7 +21,18 @@
                                                            ["1-9", 9], ["1-10", 10]])) %>
 
         <%= label_tag(:max_result, "Диапазон цифр для примеров на деления:") %>
-        <%= select_tag(:max_result, options_for_select([["20", 20], ["100", 100], ["200", 200]])) %>
+        <%= select_tag(:max_result, options_for_select([["10", 10], ["20", 20], ["100", 100],
+                                                        ["200", 200]], ["10", 10])) %>
+
+        <%= label_tag(:bracket, "Добавить скобочки в пример?") %>
+        <%= check_box(:bracket, "bracket") %>
+
+        <%= label_tag(:masks, "Типы примеров:") %>
+
+        <% masks.each do |key, value| %>
+          <%= check_box "masks", "", { multiple: true }, key %>
+          <%= label_tag value %>
+        <% end %>
 
         <%= hidden_field_tag(:generate, true) %>
         <%= submit_tag("СОЗДАТЬ") %>
@@ -28,7 +41,7 @@
     <% end %>
   </div>
   <div class="main-column">
-    <botton href="#" onclick="PrintDiv();">НАПЕЧАТАТЬ ПРИМЕРЫ</botton>
+    <botton href="#" onclick="PrintDiv();" class="botton-print">НАПЕЧАТАТЬ ПРИМЕРЫ</botton>
 
     <div id=divToPrint>
       <% examples.each_slice(30) do |col| %>
