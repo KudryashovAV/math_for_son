@@ -55,22 +55,24 @@ class ExamplesController < ApplicationController
   private
 
   def increase_difficult_for_sums(collection)
+    collect_maths(@math_type == 5 ? collection.values.flatten : collect_maths(collection.values.flatten))
+  end
+
+  def collect_maths(math_collection)
     signs = { "+" => @sum_range, "-" => @difference_range, "*" => @multiplication_range, "/" => @divider_range }
-    math_collection =
-      if @math_type == 5
-        collection.values
-      else
-        signs.each_with_object([]) { |sign, memo| memo << add_sign_to_sums(sign.first, collection.values, sign.last) }
-      end
-    signs.each_with_object([]) { |sign, memo| memo << add_sign_to_sums(sign.first, math_collection, sign.last) }
+    signs.each_with_object([]) do |sign, memo|
+      next if sign.last.empty?
+
+      memo << add_sign_to_sums(sign.first, math_collection, sign.last)
+    end
   end
 
   def add_sign_to_sums(sign, sums, digital_series)
     correct_sums =
-      if sign == "/" || sign = "*"
-        sums.flatten.select { |x| eval(x).in?(digital_series) }
+      if sign == "/" || sign == "*"
+        sums.select { |x| eval(x).in?(digital_series) }
       else
-        sums.flatten.select { |x| eval(x) <= params[:max_result] }
+        sums.select { |x| eval(x) <= params[:max_result].to_i }
       end
 
     results = digital_series.map do |digital|
@@ -82,8 +84,8 @@ class ExamplesController < ApplicationController
         end
       end
     end.flatten
-    condition_digital = sign == "/" ? 1 : 0
 
+    condition_digital = sign == "/" ? 1 : 0
     math_results = []
 
     while math_results.size < 150
