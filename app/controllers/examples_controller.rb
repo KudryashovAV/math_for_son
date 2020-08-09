@@ -70,9 +70,9 @@ class ExamplesController < ApplicationController
   def add_sign_to_sums(sign, sums, digital_series)
     correct_sums =
       if sign == "/" || sign == "*"
-        sums.select { |x| eval(x).in?(digital_series) }
+        sums.flatten.select { |x| eval(x).in?(digital_series) }
       else
-        sums.select { |x| eval(x) <= params[:max_result].to_i }
+        sums.flatten.select { |x| eval(x) <= params[:max_result].to_i }
       end
 
     results = digital_series.map do |digital|
