@@ -54,7 +54,7 @@ class ExamplesController < ApplicationController
   private
 
   def increase_difficult_for_sums(collection)
-    signs = { "+" => @sum_range, "-" => @difference_range, "*" => @multiplication_range, ":" => @divider_range }
+    signs = { "+" => @sum_range, "-" => @difference_range, "*" => @multiplication_range, "/" => @divider_range }
     math_collection =
       if @math_type == 5
         collection.values
@@ -71,7 +71,7 @@ class ExamplesController < ApplicationController
         sum + sign + digital.to_s
       end
     end.flatten
-    condition_digital = sign == ":" ? 1 : 0
+    condition_digital = sign == "/" ? 1 : 0
 
     math_result = []
 
