@@ -24,7 +24,7 @@ class ExamplesController < ApplicationController
 
     potential_cells[:multiplication] = @multiplication_range.map { |x| @multiplication_range.map { |y| ["#{x}*#{y}", "#{y}*#{x}"] } }.flatten.uniq
     potential_cells[:sum] = @sum_range.map { |x| @sum_range.map { |y| ["#{x}+#{y}", "#{y}+#{x}"]} }.flatten.uniq
-    potential_cells[:difference] = difference_collection.map { |key, value| value.map { |x| "#{key}-#{x}"} }.flatten
+    potential_cells[:difference] = difference_collection.map { |key, value| value.map { |x| "#{x}-#{key}"} }.flatten
     potential_cells[:devider] = devider_collection.map { |key, value| value.map { |x| "#{key}/#{x.to_f}"} }.flatten
 
     require_masks_ids = params[:masks].flatten.map(&:to_i).reject { |mask| mask == 0 }
@@ -44,10 +44,10 @@ class ExamplesController < ApplicationController
       memo
     end
 
-    sums = examples.flatten.select { |x| eval(x) < params[:max_result].to_i }.map { |x| x + "=" }.sample(150)
+    sums = examples.flatten.select { |x| eval(x) >= 0 && eval(x) < params[:max_result].to_i }.map { |x| x + "=" }.sample(150)
     sums.map { |x| x.gsub!("*", "x") }
     sums.map { |x| x.gsub!("/", ":") }
-    sums.map { |x| x.gsub(".0", "") }
+    sums.map { |x| x.gsub!(".0", "") }
 
     render :index, locals: { examples: sums, masks: masks }
   end
