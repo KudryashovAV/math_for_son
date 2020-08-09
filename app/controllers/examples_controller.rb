@@ -34,13 +34,11 @@ class ExamplesController < ApplicationController
     results = potential_cells_results(potential_cells)
 
     examples = require_masks.values.each_with_object([]) do |mask, memo|
-      case mask.size
-      when 3
+      if mask.size == 3
         memo << results.values.flatten
-      when 5
-        memo << increase_difficult_for_sums(results, mask).flatten
-      when 7
-        memo << results.values.flatten
+      else
+        @math_type = mask.size
+        memo << increase_difficult_for_sums(results).flatten
       end
 
       memo
@@ -55,20 +53,36 @@ class ExamplesController < ApplicationController
 
   private
 
-  def increase_difficult_for_sums(collection, mask)
+  def increase_difficult_for_sums(collection)
     signs = { "+" => @sum_range, "-" => @difference_range, "*" => @multiplication_range, ":" => @divider_range }
-    signs.each_with_object([]) { |sign, memo| memo << add_sign_to_sums(sign.first, collection, sign.last) }
+    math_collection =
+      if @math_type == 5
+        collection.values
+      else
+        signs.each_with_object([]) { |sign, memo| memo << add_sign_to_sums(sign.first, collection.values, sign.last) }
+      end
+    signs.each_with_object([]) { |sign, memo| memo << add_sign_to_sums(sign.first, math_collection, sign.last) }
   end
 
   def add_sign_to_sums(sign, sums, digital_series)
-    correct_sums = sums.values.flatten.select { |x| eval(x).in?(digital_series) }
+    correct_sums = sums.flatten.select { |x| eval(x).in?(digital_series) }
     result = digital_series.map do |digital|
       correct_sums.map do |sum|
         sum + sign + digital.to_s
       end
-    end
+    end.flatten
     condition_digital = sign == ":" ? 1 : 0
-    result.flatten.select { |x| eval(x) >= condition_digital }.flatten
+
+    math_result = []
+
+    while math_result.size < 150
+      return math_result if result.empty?
+
+      new_result = result.shuffle.shift(150)
+      math_result += new_result.select { |x| eval(x) >= condition_digital }
+    end
+
+    math_result
   end
 
   def potential_cells_results(collection)
