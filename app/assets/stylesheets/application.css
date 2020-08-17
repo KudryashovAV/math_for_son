@@ -31,6 +31,10 @@ label {
     color: #4CAF50;
 }
 
+form {
+    margin-top: 20px;
+}
+
 input[type=button], input[type=submit], input[type=reset] {
     background-color: #4CAF50;
     border: none;

@@ -1,6 +1,8 @@
 class ExamplesController < ApplicationController
   def index
-    masks = { 1 => "a+b", 2 => "a+b-c", 3 => "a*b-c", 4 => "a+b-c+d", 5 => "a+b-c*d" }
+    masks = { 1 => "одно действие(A+B)",
+              2 => "два действия(A+B+C)",
+              3 => "три действия(A+B+C+D)" }
 
     render :index, locals: { examples: [], masks: masks } and return unless params[:generate]
 
@@ -33,11 +35,11 @@ class ExamplesController < ApplicationController
 
     results = potential_cells_results(potential_cells)
 
-    examples = require_masks.values.each_with_object([]) do |mask, memo|
-      if mask.size == 3
+    examples = require_masks.keys.each_with_object([]) do |mask, memo|
+      if mask == 1
         memo << results.values.flatten
       else
-        @math_type = mask.size
+        @math_type = mask
         memo << increase_difficult_for_sums(results).flatten
       end
 
@@ -55,7 +57,7 @@ class ExamplesController < ApplicationController
   private
 
   def increase_difficult_for_sums(collection)
-    collect_maths(@math_type == 5 ? collection.values.flatten : collect_maths(collection.values.flatten))
+    collect_maths(@math_type == 2 ? collection.values.flatten : collect_maths(collection.values.flatten))
   end
 
   def collect_maths(math_collection)

@@ -1,5 +1,6 @@
 <div class="row">
   <div class="left-side-column">
+    <div><%= link_to "ОЧИСТИТЬ", root_path, class: "link_to_root" %></div>
     <%= form_with(url: root_path, method: :get, data: { remote: false }) do %>
       <div>
         <%= label_tag(:sum_range, "Диапазон цифр для примеров на сложение:") %>
@@ -29,10 +30,18 @@
 
         <%= label_tag(:masks, "Типы примеров:") %>
 
-        <% masks.each do |key, value| %>
-          <%= check_box "masks", "", { multiple: true }, key %>
-          <%= label_tag value %>
-        <% end %>
+        <div style="display: flex;">
+          <%= check_box "masks", "", { multiple: true, checked: true }, 1 %>
+          <%= label_tag masks[1] %>
+        </div>
+        <div style="display: flex;">
+          <%= check_box "masks", "", { multiple: true }, 2 %>
+          <%= label_tag masks[2] %>
+        </div>
+        <div style="display: flex;">
+          <%= check_box "masks", "", { multiple: true }, 3 %>
+          <%= label_tag masks[3] %>
+        </div>
 
         <%= hidden_field_tag(:generate, true) %>
         <%= submit_tag("СОЗДАТЬ") %>
@@ -40,6 +49,8 @@
       </div>
     <% end %>
   </div>
+
+
   <div class="main-column">
     <botton href="#" onclick="PrintDiv();" class="botton-print">НАПЕЧАТАТЬ ПРИМЕРЫ</botton>
 
